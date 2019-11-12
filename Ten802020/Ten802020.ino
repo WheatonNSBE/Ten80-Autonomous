@@ -19,6 +19,8 @@ Ultrasonic USS(USSPin);
 Servo speedController;
 Servo servo;
 
+int count = 1;
+
 void setup() {
   Serial.begin(9600);
   Serial.setTimeout(500);
@@ -27,10 +29,30 @@ void setup() {
   speedController.attach(speedControllerPin);
   servo.attach(servoPin);
 
-  speedController.write(0);
+  speedController.write(100);
   delay(3000);
 }
 
 void loop() {
-  speedController.write(100);
+  if (count == 1) {
+  for (int i = 100; i < 120; i++) {
+   speedController.write(i);
+  }
+  }
+
+  int RangeInCentimeters = USS.MeasureInInches();
+
+  Serial.println(RangeInCentimeters);
+   if (RangeInCentimeters >= 8) {
+    servo.write(125);
+  }
+  
+  else if (RangeInCentimeters <= 3){
+    servo.write(65);
+  }
+  
+  else if (RangeInCentimeters > 6){
+    servo.write(94);
+  }
+  count++;
 }
